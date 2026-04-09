@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
-
+import Login from "./pages/Login.jsx"
 function App() {
   return (
-    <div className="p-10 bg-amber-500">
-      <Button>Click me</Button>
-    </div>
+    <main>
+      <Login />
+    </main>
+
   )
 }
 
