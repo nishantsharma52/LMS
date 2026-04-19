@@ -1,4 +1,4 @@
-import {User} from "../models/user.model.js"
+import { User } from "../models/user.model.js"
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 
@@ -11,6 +11,11 @@ export const register = async (req, res) => {
                 message: "All fields are required",
                 success: false
             })
+        }
+        const emailRegex = /^\S+@\S+\.\S+$/;
+
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format" })
         }
         const user = await User.findOne({ email });
         if (user) {
@@ -54,14 +59,14 @@ export const login = async (req, res) => {
                 message: "Incorrect email or password"
             })
         }
-        const isPasswordMatch = await bcrypt.compare(password,user.password)
-        if(!isPasswordMatch){
-             return res.status(400).json({
+        const isPasswordMatch = await bcrypt.compare(password, user.password)
+        if (!isPasswordMatch) {
+            return res.status(400).json({
                 success: false,
                 message: "Incorrect email or password"
-             })
+            })
         }
-        generateToken(res,user, `Welcome back ${user.name}`)
+        generateToken(res, user, `Welcome back ${user.name}`)
 
     } catch (error) {
         console.log(error);
