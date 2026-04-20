@@ -65,7 +65,7 @@ useEffect(() => {
 }, [loginIsSuccess, loginError])
 
   return (
-    <div className="flex justify-center w-full items-center">
+    <div className="flex justify-center w-full items-center mt-20">
       <Tabs defaultValue="signup" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup</TabsTrigger>
