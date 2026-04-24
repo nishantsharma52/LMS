@@ -9,7 +9,7 @@ export const register = async (req, res) => {
         if (!name || !email || !password) {
             return res.status(400).json({
                 message: "All fields are required",
-                success: false
+                success: false,
             })
         }
         const emailRegex = /^\S+@\S+\.\S+$/;
