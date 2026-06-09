@@ -4,17 +4,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import DarkMode from '@/DarkMode';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
-import { Label } from './ui/label';
-import { Input } from './ui/input';
+import { Sheet, SheetClose, SheetContent,  SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+
 
 
 
 const Navbar = () => {
     const user = true;
     return (
-        <div  className=' h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10 '>
-         
+        <div className=' h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10 '>
+
             {/* desktop */}
             <div className=' max-w-7xl mx-auto hidden md:flex justify-between items-center h-full gap-10'>
                 <div className='flex items-center gap-2'>
@@ -61,54 +60,58 @@ const Navbar = () => {
                             </div>
                         )
                     }
-                    <DarkMode/>
+                    <DarkMode />
                 </div>
 
             </div>
             <div>
                 {/* mobile device  */}
-                <MobileNavbar/>
+                <div className="flex md:hidden items-center justify-between px-4 h-full">
+                    <h1 className='font-extrabold text-2xl'>E-learning</h1>
+                    <MobileNavbar />
+                </div>
             </div>
+
         </div>
     )
 }
 
 export default Navbar
 
-const MobileNavbar = ()=>{
+const MobileNavbar = () => {
+    const role = "instructor";
     return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button size='icon' className="rounded-full bg-gray-200 hover:bg-gray-200" variant="outline">
-            <Menu/>
-            </Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="grid flex-1 auto-rows-min gap-6 px-4">
-          <div className="grid gap-3">
-            <Label htmlFor="sheet-demo-name">Name</Label>
-            <Input id="sheet-demo-name" defaultValue="Pedro Duarte" />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="sheet-demo-username">Username</Label>
-            <Input id="sheet-demo-username" defaultValue="@peduarte" />
-          </div>
-        </div>
-        <SheetFooter>
-          <Button type="submit">Save changes</Button>
-          <SheetClose asChild>
-            <Button variant="outline">Close</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
- 
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button size='icon' className="rounded-full bg-gray-200 hover:bg-gray-200" variant="outline">
+                    <Menu />
+                </Button>
+            </SheetTrigger>
+            <SheetContent className="flex flex-col">
+                <SheetHeader className="flex flex-row items-center justify-between mt-5">
+                    <SheetTitle className="text-xl">E-learning</SheetTitle>
+                    <DarkMode />
+                </SheetHeader>
+                <nav className='flex flex-col space-y-4 ml-4'>
+                    <span>My Learning</span>
+                    <span>Edit Profile</span>
+                    <p>Log out</p>
+                </nav>
+                {
+                    role === "instructor" && (
+                        <SheetFooter>
+                            <Button type="submit">Dashboard</Button>
+                            <SheetClose asChild>
+                                <Button variant="outline">Close</Button>
+                            </SheetClose>
+                        </SheetFooter>
+
+                    )
+                }
+
+            </SheetContent>
+        </Sheet>
+
 
 
     )
