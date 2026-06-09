@@ -19,6 +19,7 @@ import { useEffect, useState } from "react"
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { Navigate, useNavigate } from "react-router-dom"
 const Login = () => {
   const [signupInput, SetSignupInput] = useState({ name: "", email: "", password: "" })
   const [loginInput, SetLoginInput] = useState({ email: "", password: "" })
@@ -56,6 +57,7 @@ useEffect(() => {
   if (loginIsSuccess) {
     toast.success(loginData?.message || "Login Successfully")
      SetLoginInput({email:"", password :""})
+     navigate("/")
   }
 
   if (loginError) {
@@ -63,6 +65,8 @@ useEffect(() => {
      SetLoginInput({email:"", password :""})
   }
 }, [loginIsSuccess, loginError])
+
+const navigate = useNavigate();
 
   return (
     <div className="flex justify-center w-full items-center mt-20">
