@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import DarkMode from '@/DarkMode';
 import { Sheet, SheetClose, SheetContent,  SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { Link } from 'react-router-dom';
 
 
 
@@ -34,13 +35,13 @@ const Navbar = () => {
                                 <DropdownMenuContent className="w-40" align="start">
                                     <DropdownMenuGroup>
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                        <DropdownMenuItem>
-                                            My learning
+                                        <DropdownMenuItem> <Link to="my-learning"> My learning</Link>
+                                          
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            Edit Profile
+                                        <DropdownMenuItem> <Link to="profile">  Edit Profile</Link>
+                                           
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem> 
                                             Log out
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
