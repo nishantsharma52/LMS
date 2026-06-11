@@ -5,6 +5,8 @@ import HeroSaction from "./pages/student/HeroSaction.jsx";
 import { RouterProvider } from "react-router";
 import MainLayout from "./layout/MainLayout.jsx";
 import Courses from "./pages/student/Courses.jsx";
+import MyLearning from "./pages/student/myLearning.jsx";
+import Profile from "./pages/student/Profile.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -23,7 +25,15 @@ const appRouter = createBrowserRouter([
       {
         path:"login",
         element:<Login/>
-      }
+      },
+      {
+        path:"my-learning",
+        element:<MyLearning/>
+      },
+      {
+        path:"profile",
+        element:<Profile/>
+      },
     ],
   },
 ]);
