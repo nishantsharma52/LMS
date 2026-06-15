@@ -36,11 +36,19 @@ const Login = () => {
     }
   }
 
-  const handleRegistration = async (type) => {
-    const inputData = type === "signup" ? signupInput : loginInput;
-    const action = type === "signup" ? registerUser : loginUser;
-    await action(inputData);
-  };
+ const handleRegistration = async (type) => {
+  const inputData = type === "signup" ? signupInput : loginInput;
+  const action = type === "signup" ? registerUser : loginUser;
+  try {
+    const res = await action(inputData).unwrap();
+    if (type === "login") {
+      // Jab confirm ho jaye ki mutation completely success ho gaya aur state update ho gayi
+      setTimeout(() => navigate("/"), 100); 
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
  useEffect(() => {
   if (registerIsSuccess) {
     toast.success(registerData?.message || "Signup Successfully")
@@ -57,7 +65,7 @@ useEffect(() => {
   if (loginIsSuccess) {
     toast.success(loginData?.message || "Login Successfully")
      SetLoginInput({email:"", password :""})
-     navigate("/")
+    
   }
 
   if (loginError) {
