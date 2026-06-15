@@ -7,6 +7,11 @@ import MainLayout from "./layout/MainLayout.jsx";
 import Courses from "./pages/student/Courses.jsx";
 import MyLearning from "./pages/student/myLearning.jsx";
 import Profile from "./pages/student/Profile.jsx";
+import Sidebar from "./pages/admin/Sidebar.jsx";
+import Dashboard from "./pages/admin/Dashboard.jsx";
+import CourseTable from "./pages/admin/course/CourseTable.jsx";
+import AddCourse from "./pages/admin/course/AddCourse.jsx";
+import EditCourse from "./pages/admin/course/EditCourse.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -34,7 +39,32 @@ const appRouter = createBrowserRouter([
         path:"profile",
         element:<Profile/>
       },
+
+      //admin routes
+      {
+        path:"admin",
+        element:<Sidebar/>,
+        children:[
+          {
+            path:"dashboard",
+            element:<Dashboard/>
+          },
+          {
+            path:"course",
+            element:<CourseTable/>
+          },
+          {
+            path:"course/create",
+            element:<AddCourse/>
+          },
+          {
+            path:"course/:courseId",
+            element:<EditCourse/>
+          },
+        ]
+      }
     ],
+
   },
 ]);
 function App(){
