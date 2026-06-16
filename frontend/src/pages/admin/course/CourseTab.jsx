@@ -4,13 +4,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useEditCourseMutation } from '@/features/api/courseApi';
+import { useEditCourseMutation, useGetCourseByIdQuery } from '@/features/api/courseApi';
 import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const CourseTab = () => {
+
+
     const isPublished = true;
 
     const navigate = useNavigate();
@@ -24,16 +26,33 @@ const CourseTab = () => {
         coursePrice: "",
         courseThumbnail: "",
     });
+    const params = useParams()
+    const courseId = params.courseId
+    const { data: courseByIdData, isLoading: courseByIdLoading } = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true})
+  
+    useEffect(() => {
+        if (courseByIdData?.course) {
+              const course = courseByIdData?.course
+            setInput({
+                courseTitle: course.courseTitle,
+                subTitle: course.subTitle,
+                description: course.description,
+                category: course.category,
+                courseLevel: course.courseLevel,
+                coursePrice: course.coursePrice,
+                courseThumbnail: "",
+            });
+            if(course.courseThumbnail){
+                setPreviewThumbnail(course.courseThumbnail)
+            }
+        }
+    }, [courseByIdData])
 
     const [editCourse, { data, isLoading, isSuccess, error }] = useEditCourseMutation()
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
         setInput({ ...input, [name]: value })
     }
-
-    const params = useParams()
-    const courseId = params.courseId
-
     const selectCategory = (value) => {
         setInput({ ...input, category: value })
     }
@@ -74,6 +93,7 @@ const CourseTab = () => {
             toast.error(error.data.message || "Failed to update course..")
         }
     }, [isSuccess, error])
+    if(courseByIdLoading) return <h1>Loading..</h1>
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between">
@@ -129,7 +149,7 @@ const CourseTab = () => {
                             <Label>
                                 Category
                             </Label>
-                            <Select onValueChange={selectCategory}>
+                            <Select onValueChange={selectCategory} value={input.category}>
 
                                 <SelectTrigger className='w-[200px]'>
                                     <SelectValue placeholder='Select a category' />
@@ -161,7 +181,7 @@ const CourseTab = () => {
                             <Label>
                                 Course Level
                             </Label>
-                            <Select onValueChange={selectCourseLevel} >
+                            <Select onValueChange={selectCourseLevel} value={input.courseLevel}>
                                 <SelectTrigger className='w-[200px]'>
                                     <SelectValue placeholder='Select a course level' />
                                 </SelectTrigger>
