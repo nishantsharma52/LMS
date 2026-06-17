@@ -1,22 +1,39 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useCreateLectureMutation, useGetCourseLectureQuery } from '@/features/api/courseApi'
 import { Loader2 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import Lecture from './Lecture'
 
 const CreateLecture = () => {
     const navigate = useNavigate();
     const params = useParams();
     const courseId = params.courseId
-    const isLoading = false;
+
     const [lectureTitle, setLectureTitle] = useState()
 
-    const createLectureHandler = async ()=>{
-        
+    const [createLecture, { data, isLoading, isSuccess, error }] = useCreateLectureMutation()
+
+    const { data: lectureData, isLoading: lectureLoading, isError: lectureError,refetch } = useGetCourseLectureQuery(courseId)
+
+    const createLectureHandler = async () => {
+        await createLecture({ lectureTitle, courseId })
     }
-  return (
-    <div className='w-full p-10'>
+    useEffect(() => {
+        if (isSuccess) {
+            refetch()
+            toast.success(data.message)
+        }
+        if (error) {
+            toast.error(error.data.message)
+        }
+    }, [isSuccess, error])
+
+    return (
+        <div className='w-full p-10'>
 
             {/* Heading */}
             <div className='mb-8'>
@@ -45,7 +62,7 @@ const CreateLecture = () => {
                 </div>
 
                 {/* Category */}
-               
+
                 <div className='flex items-center gap-2'>
                     <Button variant='outline' onClick={() => navigate(`/admin/course/${courseId}`)}>Back to Course</Button>
                     <Button disabled={isLoading} onClick={createLectureHandler}>
@@ -60,10 +77,20 @@ const CreateLecture = () => {
                         }
                     </Button>
                 </div>
+                <div className='mt-10'>
+                    {
+                        lectureLoading ? (
+                            <p>Loading Lectures..</p>
+                        ) : lectureError ? (<p>Failed to load lecture.</p>) : lectureData.lectures.length === 0 ? (<p>No Lecture available</p>) : (
+                            lectureData.lectures.map((lecture, index) => (<Lecture key={lecture._id} lecture={lecture} index={index} courseId={courseId}/>))
+                        )
+                    }
+
+                </div>
 
             </div>
         </div>
-  )
+    )
 }
 
 export default CreateLecture
