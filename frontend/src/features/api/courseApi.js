@@ -1,3 +1,4 @@
+import EditLecture from "@/pages/admin/lecture/EditLecture";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const COURSE_API = "http://localhost:8080/api/v1/course";
@@ -31,20 +32,44 @@ export const courseApi = createApi({
                 method: "PUT",
                 body: formData
             }),
-             invalidatesTags: ['Refetch_Creator_Course']
+            invalidatesTags: ['Refetch_Creator_Course']
         }),
         getCourseById: builder.query({
             query: (courseId) => ({
                 url: `/${courseId}`,
-                method:"GET",
-               
+                method: "GET",
+            }),
+        }),
+        createLecture: builder.mutation({
+            query: ({ lectureTitle, courseId }) => ({
+                url: `/${courseId}/lecture`,
+                method: "POST",
+                body: { lectureTitle }
+            }),
+        }),
+        getCourseLecture: builder.query({
+            query: (courseId) => ({
+                url: `/${courseId}/lecture`,
+                method: "GET",
+
+            }),
+        }),
+        editLecture: builder.mutation({
+            query:({lectureTitle, videoInfo, isPreviewFree, courseId, lectureId})=> ({
+                url:`/${courseId}/lecture/${lectureId}`,
+                method:"POST",
+                body:{lectureTitle, videoInfo, isPreviewFree}
             })
         })
     })
+
 })
 export const {
     useCreateCourseMutation,
     useGetCreatorCourseQuery,
     useEditCourseMutation,
     useGetCourseByIdQuery,
+    useCreateLectureMutation,
+    useGetCourseLectureQuery,
+    useEditLectureMutation,
 } = courseApi
