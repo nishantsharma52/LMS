@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditCourseMutation } from "@/features/api/courseApi";
+import { useEditCourseMutation, useRemoveLectureMutation,  } from "@/features/api/courseApi";
 import { useEditLectureMutation } from "@/features/api/courseApi";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ const LectureTab = () => {
     const { courseId, lectureId } = params;
 
     const [editLecture, { data, isLoading, error, isSuccess }] = useEditLectureMutation()
+    const [removeLecture, {isLoading:removeLoading,data:removeData, isSuccess:removeSuccess}] = useRemoveLectureMutation()
 
     const editLectureHandler = async () => {
         await editLecture({ lectureTitle, videoInfo:uploadVideInfo, isPreviewFree:isFree, courseId, lectureId })
@@ -70,6 +72,15 @@ const LectureTab = () => {
             }
         }
     }
+
+    const removeLectureHandler = async ()=>{
+        await removeLecture(lectureId)
+    }
+    useEffect(()=>{
+        if(removeSuccess){
+            toast.success(removeData.message)
+        }
+    },[removeSuccess])
     return (
         <Card className="w-full">
             <CardHeader>
@@ -79,8 +90,13 @@ const LectureTab = () => {
                     Make changes and click save when done.
                 </CardDescription>
                 <div className=" flex items-center gap-2">
-                    <Button className="bg-red-600 text-white" variant="destructive">
-                        Remove Lecture
+                    <Button disbaled={removeLoading} onClick={removeLectureHandler} className="bg-red-600 text-white" variant="destructive">
+                       {
+                        removeLoading ? <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                        Please wait
+                        </> : "Remove Lecture"
+                       }
                     </Button>
                 </div>
             </CardHeader>
@@ -120,8 +136,13 @@ const LectureTab = () => {
                     </div>
                 )}
                 <div className="mt-4">
-                    <Button onClick={editLectureHandler}>
-                        Update Lecture
+                    <Button disbaled={isLoading} onClick={editLectureHandler}>
+                       {
+                        isLoading ? <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                        Please wait
+                        </> : "Update Lecture"
+                       }
                     </Button>
                 </div>
 
