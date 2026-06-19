@@ -188,9 +188,9 @@ export const editLecture = async (req, res) => {
 
         //update lecture
         if (lectureTitle) lecture.lectureTitle = lectureTitle;
-        if (videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl
-        if (videoInfo.publicId) lecture.publicId = videoInfo.publicId
-        if (isPreviewFree) lecture.isPreviewFree = isPreviewFree
+        if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl
+        if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId
+        lecture.isPreviewFree = isPreviewFree
 
         await lecture.save()
         //ensure the course still has the lecture id if it was not already added;
@@ -261,5 +261,33 @@ export const getLectureById = async (req, res) => {
         return res.status(500).json({
             message: "Failed to get lecture by id"
         });
+    }
+}
+
+//public unpublic course logic
+
+export const togglePublicCourse = async (req, res) => {
+    try {
+        const {courseId} = req.params;
+        const {publish} = req.query;
+        const course = await Course.findById(courseId)
+         if (!course) {
+            return res.status(404).json({
+                message: "Course  not found"
+            })
+        }
+        course.isPublished = publish === "true"
+        await course.save()
+
+        const statusMessage = course.isPublished ? "Published": "Unpublished"
+        return res.status(200).json({
+            message:`Course is ${statusMessage}`
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Failed to updated status"
+        })
+
     }
 }
