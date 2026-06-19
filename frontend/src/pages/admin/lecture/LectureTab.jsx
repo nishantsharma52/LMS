@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditCourseMutation, useRemoveLectureMutation,  } from "@/features/api/courseApi";
+import { useEditCourseMutation, useGetLectureByIdQuery, useRemoveLectureMutation, } from "@/features/api/courseApi";
 import { useEditLectureMutation } from "@/features/api/courseApi";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
@@ -30,22 +30,33 @@ const LectureTab = () => {
     const params = useParams();
     const { courseId, lectureId } = params;
 
+    const { data: lectureData } = useGetLectureByIdQuery(lectureId)
+    const lecture = lectureData?.lecture;
+
+    useEffect(() => {
+        if (lecture) {
+            setLectureTitle(lecture.lectureTitle)
+            // setIsFree(lecture.isPreviewFree);
+            setUploadVideoInfo(lecture.videoInfo)
+        }
+    }, [lecture])
+
     const [editLecture, { data, isLoading, error, isSuccess }] = useEditLectureMutation()
-    const [removeLecture, {isLoading:removeLoading,data:removeData, isSuccess:removeSuccess}] = useRemoveLectureMutation()
+    const [removeLecture, { isLoading: removeLoading, data: removeData, isSuccess: removeSuccess }] = useRemoveLectureMutation()
 
     const editLectureHandler = async () => {
-        await editLecture({ lectureTitle, videoInfo:uploadVideInfo, isPreviewFree:isFree, courseId, lectureId })
+        await editLecture({ lectureTitle, videoInfo: uploadVideInfo, isPreviewFree: isFree, courseId, lectureId })
 
     }
 
-    useEffect(()=>{
-        if(isSuccess){
+    useEffect(() => {
+        if (isSuccess) {
             toast.success(data.message)
         }
-        if(error){
+        if (error) {
             toast.error(error.data.message)
         }
-    },[isSuccess,error])
+    }, [isSuccess, error])
 
     const fileChangeHandler = async (e) => {
         const file = e.target.files[0]
@@ -73,14 +84,14 @@ const LectureTab = () => {
         }
     }
 
-    const removeLectureHandler = async ()=>{
+    const removeLectureHandler = async () => {
         await removeLecture(lectureId)
     }
-    useEffect(()=>{
-        if(removeSuccess){
+    useEffect(() => {
+        if (removeSuccess) {
             toast.success(removeData.message)
         }
-    },[removeSuccess])
+    }, [removeSuccess])
     return (
         <Card className="w-full">
             <CardHeader>
@@ -91,12 +102,12 @@ const LectureTab = () => {
                 </CardDescription>
                 <div className=" flex items-center gap-2">
                     <Button disbaled={removeLoading} onClick={removeLectureHandler} className="bg-red-600 text-white" variant="destructive">
-                       {
-                        removeLoading ? <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                        Please wait
-                        </> : "Remove Lecture"
-                       }
+                        {
+                            removeLoading ? <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Please wait
+                            </> : "Remove Lecture"
+                        }
                     </Button>
                 </div>
             </CardHeader>
@@ -106,8 +117,8 @@ const LectureTab = () => {
                         Title
                     </Label>
                     <Input
-                    value={lectureTitle}
-                    onChange={(e) => setLectureTitle(e.target.value)}
+                        value={lectureTitle}
+                        onChange={(e) => setLectureTitle(e.target.value)}
                         type="text"
                         placeholder="Ex. Introduction to Javascript"
                     />
@@ -125,7 +136,7 @@ const LectureTab = () => {
                     />
                 </div>
                 <div className="flex items-center space-x-2 my-5">
-                    <Switch id="airplane-mode" />
+                    <Switch checked={isFree} onCheckedChange={setIsFree} id="airplane-mode" />
                     <Label htmlFor="">Is this video Free</Label>
                 </div>
 
@@ -137,12 +148,12 @@ const LectureTab = () => {
                 )}
                 <div className="mt-4">
                     <Button disbaled={isLoading} onClick={editLectureHandler}>
-                       {
-                        isLoading ? <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                        Please wait
-                        </> : "Update Lecture"
-                       }
+                        {
+                            isLoading ? <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Please wait
+                            </> : "Update Lecture"
+                        }
                     </Button>
                 </div>
 
