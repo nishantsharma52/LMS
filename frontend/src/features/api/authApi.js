@@ -50,7 +50,7 @@ export const authApi = createApi({
         }),
         loadUser:builder.query({
             query:() =>({
-                url:"profile",
+                url:"/profile",
                 method:"GET"
             }),
                  async onQueryStarted(_, { queryFulfilled, dispatch }) {
