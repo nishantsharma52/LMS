@@ -7,7 +7,7 @@ const Sidebar = () => {
         <div className='flex'>
             
             {/* Sidebar */}
-            <div className='hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-r-gray-300 dark:border-gray-700 bg-[#f0f0f0] p-5 sticky top-0 h-screen'>
+            <div className='hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-r-gray-300 dark:border-gray-700  p-5 sticky top-0 h-screen'>
                 
                 <div className='mt-20 space-y-4'>
                     
